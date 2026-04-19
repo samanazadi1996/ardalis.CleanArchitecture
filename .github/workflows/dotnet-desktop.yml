@@ -1,0 +1,49 @@
+name: .NET Core Desktop
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    strategy:
+      matrix:
+        configuration: [Release]
+
+    runs-on: windows-latest  
+    
+    env:
+      Solution_Name: ./Clean.Architecture.slnx
+      MinimalClean_Architecture: ./MinimalClean/MinimalClean.Architecture.slnx 
+      
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 10.0.x
+
+    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Restore NuGet packages
+      run: dotnet restore $env:Solution_Name
+
+    - name: Build Full Template
+      run: dotnet build $env:Solution_Name -c Release --no-restore -p:NoWarn=NU1902
+      
+    - name: Test Full Template
+      run: dotnet test $env:Solution_Name -c Release --no-build --verbosity normal
+      
+    - name: Build MinimalClean Template
+      run: dotnet build $env:MinimalClean_Architecture -c Release
