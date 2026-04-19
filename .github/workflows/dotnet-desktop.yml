@@ -40,7 +40,7 @@ jobs:
       run: dotnet restore $env:Solution_Name
 
     - name: Build Full Template
-      run: dotnet build $env:Solution_Name -c Release --no-restore -p:NoWarn=NU1902
+      run: dotnet build $env:Solution_Name -c Release --no-restore
       
     - name: Test Full Template
       run: dotnet test $env:Solution_Name -c Release --no-build --verbosity normal
