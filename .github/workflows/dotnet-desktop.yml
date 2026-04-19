@@ -37,10 +37,10 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Build Full Template
-      run: dotnet build $env:Solution_Name
+      run: dotnet build $env:Solution_Name -c Release --no-restore -p:NoWarn=NU1902
       
     - name: Test Full Template
-      run: dotnet test $env:Solution_Name --no-build --verbosity normal
+      run: dotnet test $env:Solution_Name -c Release --no-build --verbosity normal
       
     - name: Build MinimalClean Template
-      run: dotnet build $env:MinimalClean_Architecture
+      run: dotnet build $env:MinimalClean_Architecture -c Release
